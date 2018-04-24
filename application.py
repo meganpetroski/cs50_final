@@ -1,34 +1,23 @@
-import os
-
-from cs50 import SQL, eprint
+from cs50 import SQL
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions
 from werkzeug.security import check_password_hash, generate_password_hash
-from datetime import datetime
 
 from helpers import apology, login_required, lookup, usd
-
-# Ensure environment variable is set
-if not os.environ.get("API_KEY"):
-    raise RuntimeError("API_KEY not set")
 
 # Configure application
 app = Flask(__name__)
 
-# Ensure templates are auto-reloaded
-app.config["TEMPLATES_AUTO_RELOAD"] = True
-
-
-@app.after_request
 # Ensure responses aren't cached
-def after_request(response):
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-
+if app.config["DEBUG"]:
+    @app.after_request
+    def after_request(response):
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Expires"] = 0
+        response.headers["Pragma"] = "no-cache"
+        return response
 
 # Custom filter
 app.jinja_env.filters["usd"] = usd
@@ -44,288 +33,255 @@ db = SQL("sqlite:///heartbeat.db")
 
 
 @app.route("/")
-@login_required
+# @login_required
 def index():
     """Show portfolio of stocks"""
-    # POST method
-    if request.method == "POST":
-        user = session["user_id"]
-        # look up symbol input by user (choose from drop down list...)
-        quote = lookup(request.form.get("symbol"))
-        pdata = db.execute("SELECT * FROM portfolio")
-        udata = db.execute("SELECT * FROM users")
 
-        # resource https://docs.quantifiedcode.com/python-anti-patterns/correctness/not_using_get_to_return_a_default_value_from_a_dictionary.html
-        stock = ''
-        if "symbol" in quote:
-            stock = quote["symbol"]
+    # Query database for user's cash
+    rows = db.execute("SELECT cash FROM users WHERE id = :id", id=session["user_id"])
+    if not rows:
+        return apology("missing user")
+    cash = rows[0]["cash"]
+    total = cash
 
-        shares = ''
-        if "shares" in pdata:
-            shares = pdata["shares"]
+    # Query database for user's stocks
+    stocks = db.execute("""SELECT symbol, SUM(shares) AS shares FROM transactions
+        WHERE user_id = :user_id GROUP BY symbol HAVING SUM(shares) > 0""", user_id=session["user_id"])
 
-        return render_template("index.html", stock=stock)
+    # Query Yahoo for stocks' latest names and prices
+    for stock in stocks:
+        quote = lookup(stock["symbol"])
+        stock["name"] = quote["name"]
+        stock["price"] = quote["price"]
+        total += stock["shares"] * quote["price"]
 
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-    else:
-        return render_template("index.html")
+    # Render portfolio
+    return render_template("index.html", cash=cash, stocks=stocks, total=total)
 
 
-@app.route("/buy", methods=["GET", "POST"])
-@login_required
-def buy():
-    """Buy shares of stock"""
-    # POST method
-    if request.method == "POST":
-        # validate shares input
-        try:
-            shares = int(request.form.get("shares"))
-        except ValueError:
-            return apology("need valid number of shares", 400)
-        # get stock, number of shares
+# @app.route("/buy", methods=["GET", "POST"])
+# # @login_required
+# def buy():
+#     """Enable user to buy a stock."""
 
-        quote = lookup(request.form.get("symbol"))
-        # check if symbol given is valid
-        if not quote:
-            return apology("Need valid symbol", 400)
+#     # POST
+#     if request.method == "POST":
 
-        shares = int(request.form.get("shares"))
+#         # Validate form submission
+#         if not request.form.get("symbol"):
+#             return apology("missing symbol")
+#         elif not request.form.get("shares"):
+#             return apology("missing shares")
+#         elif not request.form.get("shares").isdigit():
+#             return apology("invalid shares")
+#         shares = int(request.form.get("shares"))
 
-        # render apology if stock or share are blank
-        if not request.form.get("symbol") or not request.form.get("shares"):
-            return apology("must provide valid stock symbol", 400)
-        if int(request.form.get("shares")) < 0:
-            return apology("need a positive number of shares!", 400)
+#         # Get stock quote
+#         quote = lookup(request.form.get("symbol"))
+#         if not quote:
+#             return apology("invalid symbol")
 
-        # define price again
-        price = ''
-        if "price" in quote:
-            price = float(quote["price"])
+#         # Cost to buy
+#         cost = shares * quote["price"]
 
-        # time
-        # resource https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xiii-dates-and-times-legacy
-        now = datetime.now()
+#         # Get user's cash balance
+#         rows = db.execute("SELECT cash FROM users WHERE id = :id", id=session["user_id"])
+#         if not rows:
+#             return apology("missing user")
+#         cash = rows[0]["cash"]
 
-        # calculate user
-        user = session["user_id"]
+#         # Ensure user can afford
+#         if cash < cost:
+#             return apology("can't afford")
 
-        # calculate if user has enough cash
-        cash = db.execute("SELECT cash FROM users WHERE id = :user", user=session["user_id"])
-        for c in cash:
-            money = float(c["cash"])
-            # update cash as appropriate unless there's not enough, then apologize
-            new_price = price * shares
-            if money > new_price:
-                new_money = round(money - new_price)
-                # add stock to portfolio - keep track of stock symbol and number of shares
-                # MISSING: should find if stock already exisits; if so update just the number of shares
-                row = db.execute("INSERT INTO portfolio (id, stock, shares, price, timestamp) VALUES (:id, :stock, :shares, :price, :timestamp)",
-                                 id=session["user_id"], stock=request.form.get("symbol"), shares=int(request.form.get("shares")), price=price, timestamp=now)
-                # update users table with available cash
-                row = db.execute("UPDATE users SET cash = :newmoney WHERE id = :user", newmoney=new_money, user=user)
-                return render_template("index.html", price=price)
-            else:
-                return apology("not enough cash", 400)
+#         # Record purchase
+#         db.execute("""INSERT INTO transactions (user_id, symbol, shares, price)
+#             VALUES(:user_id, :symbol, :shares, :price)""",
+#                   user_id=session["user_id"], symbol=quote["symbol"], shares=shares, price=quote["price"])
 
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+#         # Deduct cash
+#         db.execute("UPDATE users SET cash = cash - :cost WHERE id = :id",
+#                   cost=cost, id=session["user_id"])
 
-        return redirect("/")
-    else:
-        return render_template("buy.html")
+#         # Display portfolio
+#         flash("Bought!")
+#         return redirect("/")
+
+#     # GET
+#     else:
+#         return render_template("buy.html")
 
 
-@app.route("/history")
-@login_required
-def history():
-    """Show history of transactions"""
-    if request.method == "POST":
-        return render_template("history.html")
-    else:
-        return render_template("history.html")
+# @app.route("/history")
+# # @login_required
+# def history():
+#     """Display user's history of transactions."""
+#     transactions = db.execute(
+#         "SELECT * FROM transactions WHERE user_id = :user_id", user_id=session["user_id"])
+#     return render_template("history.html", transactions=transactions)
 
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    """Log user in"""
+# @app.route("/login", methods=["GET", "POST"])
+# def login():
+#     """Log user in."""
 
-    # Forget any user_id
-    session.clear()
+#     # Forget any user_id
+#     session.clear()
 
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
+#     # User reached route via POST (as by submitting a form via POST)
+#     if request.method == "POST":
 
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
+#         # Ensure username was submitted
+#         if not request.form.get("username"):
+#             return apology("must provide username", 403)
 
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
+#         # Ensure password was submitted
+#         elif not request.form.get("password"):
+#             return apology("must provide password", 403)
 
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))
+#         # Query database for username
+#         rows = db.execute("SELECT * FROM users WHERE username = :username",
+#                           username=request.form.get("username"))
 
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return apology("invalid username and/or password", 403)
+#         # Ensure username exists and password is correct
+#         if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+#             return apology("invalid username and/or password", 403)
 
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+#         # Remember which user has logged in
+#         session["user_id"] = rows[0]["id"]
 
-        # Redirect user to home page
-        return redirect("/")
+#         # Redirect user to home page
+#         return redirect("/")
 
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("login.html")
-
-
-@app.route("/logout")
-def logout():
-    """Log user out"""
-
-    # Forget any user_id
-    session.clear()
-
-    # Redirect user to login form
-    return redirect("/")
+#     # User reached route via GET (as by clicking a link or via redirect)
+#     else:
+        # return render_template("login.html")
 
 
-@app.route("/quote", methods=["GET", "POST"])
-@login_required
-def quote():
-    """Get stock quote."""
-    # POST method
-    if request.method == "POST":
-        # look up symbol input by user
-        quote = lookup(request.form.get("symbol"))
+# @app.route("/logout")
+# def logout():
+#     """Log user out."""
 
-        # check if symbol given is valid
-        if not quote:
-            return apology("Need valid symbol", 400)
+#     # Forget any user_id
+#     session.clear()
 
-        # display symbol and price(in usd)
-        # resource https://docs.quantifiedcode.com/python-anti-patterns/correctness/not_using_get_to_return_a_default_value_from_a_dictionary.html
-        stock = ''
-        if "symbol" in quote:
-            stock = quote["symbol"]
-
-        price = ''
-        if "price" in quote:
-            price = usd(quote["price"])
-
-        # only display the stock info if given a valid symbol
-        return render_template("quoted.html", stock=stock, price=price)
-
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-
-        return redirect("/")
-
-    # GET method
-    else:
-        # show the quote template to the user
-        return render_template("quote.html")
+#     # Redirect user to login form
+#     return redirect("/login")
 
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    """Register user"""
-    # POST method
-    if request.method == "POST":
-        # get username, password, password confirmation from user via form
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirmation = request.form.get("confirmation")
+# @app.route("/quote", methods=["GET", "POST"])
+# # @login_required
+# def quote():
+#     """Get a stock quote."""
 
-        # render apology if username is blank or username already existst
-        if not request.form.get("username"):
-            return apology("must provide username", 400)
-        # render apology if password is blank
-        elif not request.form.get("password"):
-            return apology("must provide password", 400)
-        # render apology if password and confirmation do not match
-        elif not request.form.get("password") == request.form.get("confirmation"):
-            return apology("passwords must match", 400)
+#     # POST
+#     if request.method == "POST":
 
-        else:
-            # generate_password_hash()
-            hash = generate_password_hash(request.form.get("password"))
-            # add user name and hash for password to the db
-            result = db.execute("INSERT INTO users (username, hash) VALUES(:username, :hash)",
-                                username=request.form.get("username"), hash=hash)
-            if not result:
-                return apology("This username is taken", 400)
+#         # Validate form submission
+#         if not request.form.get("symbol"):
+#             return apology("missing symbol")
 
-            return redirect("/")
+#         # Get stock quote
+#         quote = lookup(request.form.get("symbol"))
+#         if not quote:
+#             return apology("invalid symbol")
 
-    # GET method
-    else:
-        # show the register template to the user
-        return render_template("register.html")
+#         # Display quote
+#         return render_template("quoted.html", quote=quote)
+
+#     # GET
+#     else:
+#         return render_template("quote.html")
 
 
-@app.route("/sell", methods=["GET", "POST"])
-@login_required
-def sell():
-    """Sell shares of stock"""
-    # POST method
-    if request.method == "POST":
-        # get & validate stock, number of shares
-        try:
-            shares = int(request.form.get("shares"))
-        except ValueError:
-            return apology("need valid number of shares", 400)
+# @app.route("/register", methods=["GET", "POST"])
+# def register():
+#     """Register user for an account."""
 
-        quote = lookup(request.form.get("symbol"))
+#     # POST
+#     if request.method == "POST":
 
-        # check if symbol given is valid
-        if not quote:
-            return apology("Need valid symbol", 400)
+#         # Validate form submission
+#         if not request.form.get("username"):
+#             return apology("missing username")
+#         elif not request.form.get("password"):
+#             return apology("missing password")
+#         elif request.form.get("password") != request.form.get("confirmation"):
+#             return apology("passwords don't match")
 
-         # peel apart elements
-         # resource https://docs.quantifiedcode.com/python-anti-patterns/correctness/not_using_get_to_return_a_default_value_from_a_dictionary.html
-        stock = ''
-        if "symbol" in quote:
-            stock = quote["symbol"]
+#         # Add user to database
+#         id = db.execute("INSERT INTO users (username, hash) VALUES(:username, :hash)",
+#                         username=request.form.get("username"),
+#                         hash=generate_password_hash(request.form.get("password")))
+#         if not id:
+#             return apology("username taken")
 
-        price = ''
-        if "price" in quote:
-            price = usd(quote["price"])
+#         # Log user in
+#         session["user_id"] = id
 
-        # get number of shares user wants to sell
-        selling = request.form.get("shares")
+#         # Let user know they're registered
+#         flash("Registered!")
+#         return redirect("/")
 
-        # apologize if user doesn't have any stock
-        a = db.execute("SELECT * FROM portfolio WHERE id = :user AND stock = :stock", user=session["user_id"], stock=stock)
-        if not a:
-            return apology("you don't own any of this stock", 400)
+#     # GET
+#     else:
+#         return render_template("register.html")
 
-        # apologize if wrong number of shares (not pos integer or don't own)
-        b = db.execute("SELECT shares FROM portfolio WHERE id = :user AND stock = :stock", user=session["user_id"], stock=stock)
-        number = ''
-        if "shares" in quote:
-            number = quote["shares"]
-        if number < selling:
-            return apology("you don't own enough of this stock", 400)
 
-        # only display the stock info if given a valid symbol
-        return render_template("sold.html", selling=selling, stock=stock, price=price, number=number)
+# @app.route("/sell", methods=["GET", "POST"])
+# # @login_required
+# def sell():
+#     """Enable user to sell a stock."""
 
-        # update cash in users
+#     # POST
+#     if request.method == "POST":
 
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+#         # Validate form submission
+#         if not request.form.get("symbol"):
+#             return apology("missing symbol")
+#         symbol = request.form.get("symbol").upper()
+#         if not request.form.get("shares"):
+#             return apology("missing shares")
+#         elif not request.form.get("shares").isdigit():
+#             return apology("invalid shares")
+#         shares = int(request.form.get("shares"))
 
-        return redirect("/")
+#         # Check how many shares user owes
+#         rows = db.execute("""SELECT SUM(shares) AS shares FROM transactions
+#             WHERE user_id = :user_id AND symbol = :symbol GROUP BY symbol""",
+#                           user_id=session["user_id"], symbol=symbol)
+#         if len(rows) != 1:
+#             return apology("symbol not owned")
+#         if shares > rows[0]["shares"]:
+#             return apology("too many shares")
 
-    # GET method
-    else:
-        # show the quote template to the user
-        return render_template("sell.html")
+#         # Get stock quote
+#         quote = lookup(request.form.get("symbol"))
+
+#         # Record sale
+#         db.execute("""INSERT INTO transactions (user_id, symbol, shares, price)
+#             VALUES(:user_id, :symbol, :shares, :price)""",
+#                   user_id=session["user_id"], symbol=quote["symbol"], shares=-shares, price=quote["price"])
+
+#         # Deposit cash
+#         db.execute("UPDATE users SET cash = cash + :value WHERE id = :id",
+#                   value=shares * quote["price"], id=session["user_id"])
+
+#         # Display portfolio
+#         flash("Sold!")
+#         return redirect("/")
+
+#     # GET
+#     else:
+
+#         # Get symbols owned
+#         rows = db.execute("""SELECT symbol FROM transactions
+#                             WHERE user_id = :user_id GROUP BY symbol HAVING SUM(shares) > 0""",
+#                           user_id=session["user_id"])
+#         symbols = [row["symbol"] for row in rows]
+
+        # # Display sales form
+        # return render_template("sell.html", symbols=symbols)
 
 
 def errorhandler(e):
