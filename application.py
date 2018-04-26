@@ -17,6 +17,8 @@ def index():
     sample = db.execute("SELECT * FROM results")
 
     #cal = (calendar.calendar(2018))
+    hc = calendar.HTMLCalendar(calendar.SUNDAY)
+    str = hc.formatmonth(2018, 1)
 
-    return render_template("home.html", sample=sample)
+    return render_template("home.html", sample=sample, str=str)
     # return "The website, it works!!"
