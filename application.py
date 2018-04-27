@@ -22,8 +22,9 @@ def index():
     return render_template("home.html", cal=cal)
     # return "The website, it works!!"
 
-@app.route("/comparison")
-def comparison():
+@app.route("/compare")
+def compare():
 
 
-    return render_template("comparison.html")
+    return render_template("compare.html")
+
