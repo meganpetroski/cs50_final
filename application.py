@@ -25,6 +25,10 @@ def index():
 @app.route("/compare")
 def compare():
 
-
     return render_template("compare.html")
+
+@app.route("/query")
+def query():
+
+    return render_template("query.html")
 
