@@ -16,9 +16,14 @@ def index():
     # sample a record from heartbeat.db
     sample = db.execute("SELECT * FROM results")
 
-    #cal = (calendar.calendar(2018))
-    hc = calendar.HTMLCalendar(calendar.SUNDAY)
-    str = hc.formatmonth(2018, 1)
+    cal = (calendar.calendar(2018))
+    print(cal)
 
-    return render_template("home.html", sample=sample, str=str)
+    return render_template("home.html", cal=cal)
     # return "The website, it works!!"
+
+@app.route("/comparison")
+def comparison():
+
+
+    return render_template("comparison.html")
