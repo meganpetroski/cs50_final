@@ -7,18 +7,72 @@
 {% block main %}
     <p>
         Query Definitions:<br>
-        This website is designed to display results of the Heartbeat query system. Users can view results with a product name and run number
-        on the Results page. The Query page describes the query and the SQL used to obtain the result. Finally, the Comparison page allows a
-        user to pick 2 runs for a product and compare them against one another and see the differences between the 2 highlighted.
+        Table Name: SPL Objects<br>
+        <br>
+        Shows number of records in table<br>
+        SELECT count (*)<br>
+        FROM {OBJECT};<br>
+        <br>
+        Shows number of null obj_id records - there should be none<br>
+        SELECT obj_id, count(*)<br>
+        FROM {OBJECT}<br>
+        WHERE obj_id IS NULL<br>
+        GROUP BY obj_id;<br>
+        <br>
+        Checks object types and counts. Only value allowed is 'Neighborhood'<br>
+        SELECT obj_typ, count(*)<br>
+        FROM {OBJECT}<br>
+        GROUP BY obj_typ;<br>
+        <br>
+        Checks obj_subtcd and associated counts. Only values allowed are M, N, S<br>
+        SELECT obj_subtcd, count(*)<br>
+        FROM {OBJECT}<br>
+        GROUP BY obj_subtcd;<br>
+        <br>
+        Checks obj_subtype and and associated counts. Only values allowed are Macro Neighborhood, Neighborhood, Sub Neighborhood<br>
+        SELECT obj_subtyp, count(*)<br>
+        FROM {OBJECT}<br>
+        GROUP BY obj_subtyp;<br>
+        <br>
+        Groups the 3 previous queries and counts together, counts should match each other<br>
+        SELECT DISTINCT obj_typ, obj_subtcd, obj_subtyp<br>
+        FROM {OBJECT}<br>
+        GROUP BY obj_typ, obj_subtcd, obj_subtyp<br>
+        ORDER BY obj_subtyp;<br>
+        <br>
+        Lists number of countries listed in tables. Should match previous quarter unless we added a new country.<br>
+        SELECT country, count(*)<br>
+        FROM {OBJECT}<br>
+        GROUP BY country<br>
+        ORDER BY country;<br>
+        <br>
+        Checks to make sure that the lat field is populated. True is the expected response<br>
+        SELECT EVERY (lat IS NOT NULL)<br>
+        FROM {OBJECT};<br>
+        <br>
+        Checks to make sure that the long field is populated. True is the expected response<br>
+        SELECT EVERY (lon IS NOT NULL)<br>
+        FROM {OBJECT};<br>
+        <br>
+        Checks that obj_area field is populated. Expected result is True<br>
+        SELECT EVERY (obj_area IS NOT NULL)<br>
+        FROM {OBJECT};<br>
+        <br>
+        Checks for objects that are within an area smaller than 5.0. This is purely informational, but it seems unlikely that there would be many records with an obj_area that small.<br>
+        SELECT obj_id<br>
+        FROM {OBJECT}<br>
+        <br>
+        Returns date in reldate field. Reldate should be the date that the product was run.<br>
+        SELECT reldate, count(reldate)<br>
+        FROM {OBJECT}<br>
+        GROUP BY reldate;<br>
+        WHERE obj_area < 5.0;<br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
 
 
-        <br>
-        <br>
-        And a basic calendar<br>
-        {{ cal }}
-        <br>
-        <br>
-
-        Requirements for a query to pass or fail.
     </p>
 {% endblock %}
