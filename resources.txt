@@ -1,3 +1,4 @@
 https://www.w3schools.com/bootstrap/bootstrap_navbar.asp
 https://www.w3schools.com/html/html_iframe.asp
 https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_topnav
+https://www.quackit.com/css/css_color_codes.cfm
