@@ -16,10 +16,10 @@ def index():
     # sample a record from heartbeat.db
     sample = db.execute("SELECT * FROM results")
 
-    cal = (calendar.calendar(2018))
-    print(cal)
+    # cal = (calendar.calendar(2018))
+    # print(cal)
 
-    return render_template("home.html", cal=cal)
+    return render_template("home.html")
     # return "The website, it works!!"
 
 @app.route("/compare")
