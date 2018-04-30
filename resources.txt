@@ -2,3 +2,11 @@ https://www.w3schools.com/bootstrap/bootstrap_navbar.asp
 https://www.w3schools.com/html/html_iframe.asp
 https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_topnav
 https://www.quackit.com/css/css_color_codes.cfm
+https://www.w3schools.com/colors/colors_names.asp
+https://www.w3schools.com/css/css_howto.asp
+https://www.w3schools.com/css/css_margin.asp
+https://support.google.com/docs/answer/37579#embed
+https://mikeboers.github.io/Flask-Images/
+https://www.w3schools.com/howto/howto_js_topnav.asp
+https://www.youtube.com/watch?v=1NiXhS-d1wU
+https://pythonspot.com/flask-web-app-with-python/

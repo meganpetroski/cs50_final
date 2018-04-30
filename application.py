@@ -24,6 +24,12 @@ def index():
 
 @app.route("/compare")
 def compare():
+    # Read files
+    # if not request.files["file1"] or not request.files["file2"]:
+    #     abort(400, "missing file")
+    # try:
+    #     file1 = request.files["file1"].read().decode("utf-8")
+    #     file2 = request.files["file2"].read().decode("utf-8")
 
     return render_template("compare.html")
 
@@ -32,3 +38,7 @@ def query():
 
     return render_template("query.html")
 
+@app.route("/result")
+def resul():
+
+    return render_template("result.html")
