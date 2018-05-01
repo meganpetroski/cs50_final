@@ -24,14 +24,10 @@ def index():
 
 @app.route("/compare")
 def compare():
-    # Read files
-    # if not request.files["file1"] or not request.files["file2"]:
-    #     abort(400, "missing file")
-    # try:
-    #     file1 = request.files["file1"].read().decode("utf-8")
-    #     file2 = request.files["file2"].read().decode("utf-8")
+    # get a list of run numbers
+    dates1 = db.execute("SELECT buildnumber FROM results")
 
-    return render_template("compare.html")
+    return render_template("compare.html", dates1=dates1)
 
 @app.route("/query")
 def query():

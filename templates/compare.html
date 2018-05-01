@@ -10,17 +10,24 @@
         <br>
         <br>
         <br>
-    <div class="col-6">
-        <pre>{{ file1 | safe }}</pre>
+        <p>
+            Choose the first run number to compare.
+        </p>
+<select name="dates1" method="GET" action="/">
+    <option value="{{dates1[1]}}" selected>{{dates1[1]}}</option>
+    {% for date in dates1[1] %}
+        <option value="{{dates1}}">{{dates1}}</option>
+    {% endfor %}
+</select>
+        <p>
+            Choose the second run number to compare.
+        </p>
+        <select name="dates1" method="GET" action="/">
+    <option value="{{dates1[1]}}" selected>{{dates1[1]}}</option>
+    {% for date in dates1[1] %}
+        <option value="{{dates1}}">{{dates1}}</option>
+    {% endfor %}
+</select>
     </div>
-    <div class="col-6">
-        <pre>{{ file2 | safe }}</pre>
-    </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        Requirements of this page: allows the user to choose 2 runs from the same product and compare them against one another. Highlight the results
-        that are different. Assign pass/fail status? Email users results?
     </p>
 {% endblock %}
