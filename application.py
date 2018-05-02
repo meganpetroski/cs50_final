@@ -25,7 +25,11 @@ def index():
 @app.route("/compare")
 def compare():
     # get a list of run numbers
-    dates1 = db.execute("SELECT buildnumber FROM results")
+    dates1 = db.execute("SELECT DISTINCT buildnumber FROM data")
+
+    # for p in dates1.items:
+    #     print (p[0])
+    #     print (p[1])
 
     return render_template("compare.html", dates1=dates1)
 

@@ -10,23 +10,47 @@
         <br>
         <br>
         <br>
-        <p>
-            Choose the first run number to compare.
-        </p>
-<select name="dates1" method="GET" action="/">
-    <option value="{{dates1[1]}}" selected>{{dates1[1]}}</option>
-    {% for date in dates1[1] %}
-        <option value="{{dates1}}">{{dates1}}</option>
-    {% endfor %}
-</select>
-        <p>
-            Choose the second run number to compare.
-        </p>
-        <select name="dates1" method="GET" action="/">
-    <option value="{{dates1[1]}}" selected>{{dates1[1]}}</option>
-    {% for date in dates1[1] %}
-        <option value="{{dates1}}">{{dates1}}</option>
-    {% endfor %}
+        <form action="/compare">
+        <div class="form-group">
+            <select class="form-control" name="buildnumber">
+                <option disabled selected value="">Build Number</option>
+                {% for date in dates1 %}
+                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <form action="/compare">
+        <div class="form-group">
+            <select class="form-control" name="buildnumber">
+                <option disabled selected value="">Build Number</option>
+                {% for date in dates1 %}
+                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+
+
+
+
+<!--        <p>-->
+<!--            Choose the first run number to compare.-->
+<!--        </p>-->
+<!--<select name="dates1" method="GET" action="/">-->
+<!--    <option value="{{dates1[1]}}" selected>{{dates1[1]}}</option>-->
+<!--    {% for date in dates1[1] %}-->
+<!--        <option value="{{dates1}}">{{dates1}}</option>-->
+<!--    {% endfor %}-->
+<!--</select>-->
+    <!--    <p>-->
+    <!--        Choose the second run number to compare.-->
+    <!--    </p>-->
+    <!--    <select name="dates1" method="GET" action="/">-->
+    <!--<option value="{{dates1[1]}}" selected>{{dates1[1]}}</option>-->
+    <!--{% for date in dates1[1] %}-->
+    <!--    <option value="{{dates1}}">{{dates1}}</option>-->
+    <!--{% endfor %}-->
 </select>
     </div>
     </p>
