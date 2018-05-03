@@ -1,84 +1,47 @@
-import csv
-import os
-import urllib.request
-
-from flask import redirect, render_template, request, session
-from functools import wraps
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 
-def apology(message, code=400):
-    """Render message as an apology to user."""
-    def escape(s):
-        """
-        Escape special characters.
+def lines(a, b):
+    """Return lines in both a and b"""
 
-        https://github.com/jacebrowning/memegen#special-characters
-        """
-        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
-                         ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
-            s = s.replace(old, new)
-        return s
-    return render_template("apology.html", top=code, bottom=escape(message)), code
+    # Split strings into sets of lines
+    lines1 = set(a.splitlines())
+    lines2 = set(b.splitlines())
+
+    # Intersect sets
+    return list(lines1.intersection(lines2))
 
 
-def login_required(f):
-    """
-    Decorate routes to require login.
+def sentences(a, b):
+    """Return sentences in both a and b"""
 
-    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect("/login")
-        return f(*args, **kwargs)
-    return decorated_function
+    # Tokenize strings
+    tokens1 = set(sent_tokenize(a))
+    tokens2 = set(sent_tokenize(b))
+
+    # Intersect sets
+    return list(tokens1.intersection(tokens2))
 
 
-def lookup(symbol):
-    """Look up quote for symbol."""
+def substrings(a, b, n):
+    """Return substrings of length n in both a and b"""
 
-    # Reject symbol if it starts with caret
-    if symbol.startswith("^"):
-        return None
+    # Sets of unique substrings of length n
+    substrings1 = _substrings(a, n)
+    substrings2 = _substrings(b, n)
 
-    # Reject symbol if it contains comma
-    if "," in symbol:
-        return None
+    # Intersect sets
+    intersection = substrings1.intersection(substrings2)
 
-    # Query Alpha Vantage for quote
-    # https://www.alphavantage.co/documentation/
-    try:
-
-        # GET CSV
-        url = f"https://www.alphavantage.co/query?apikey={os.getenv('API_KEY')}&datatype=csv&function=TIME_SERIES_INTRADAY&interval=1min&symbol={symbol}"
-        webpage = urllib.request.urlopen(url)
-
-        # Parse CSV
-        datareader = csv.reader(webpage.read().decode("utf-8").splitlines())
-
-        # Ignore first row
-        next(datareader)
-
-        # Parse second row
-        row = next(datareader)
-
-        # Ensure stock exists
-        try:
-            price = float(row[4])
-        except:
-            return None
-
-        # Return stock's name (as a str), price (as a float), and (uppercased) symbol (as a str)
-        return {
-            "price": price,
-            "symbol": symbol.upper()
-        }
-
-    except:
-        return None
+    # Return as list
+    return list(intersection)
 
 
-def usd(value):
-    """Format value as USD."""
-    return f"${value:,.2f}"
+def _substrings(s, n):
+    """Return set of substrings of s, each of length n."""
+
+    # Return substrings of length i
+    substrings = set()
+    for i in range(len(s) - n + 1):
+        substrings.add(s[i:i + n])
+    return substrings

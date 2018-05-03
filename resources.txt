@@ -11,3 +11,6 @@ https://www.w3schools.com/howto/howto_js_topnav.asp
 https://www.youtube.com/watch?v=1NiXhS-d1wU
 https://pythonspot.com/flask-web-app-with-python/
 https://stackoverflow.com/questions/45877080/how-to-create-dropdown-menu-from-python-list-using-flask-and-html
+https://www.tutorialspoint.com/python/python_dictionary.htm
+https://stackoverflow.com/questions/23557063/passing-value-from-a-drop-down-menu-to-a-flask-template
+http://www.blog.pythonlibrary.org/2017/12/14/flask-101-adding-editing-and-displaying-data/
