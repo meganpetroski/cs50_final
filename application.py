@@ -34,9 +34,11 @@ def compare():
 def compared():
     # get the data from run #1
     file1 = db.execute("SELECT * FROM data WHERE buildnumber = :file1", file1='11723')
+
     # get the data from run #2
     file2 = db.execute("SELECT * FROM data WHERE buildnumber = :file2", file2='11607')
 
+    return render_template("compared.html", file1=file1)
 
 
     # read files
@@ -69,7 +71,7 @@ def compared():
     # highlights2 = highlight(file2, matches)
 
     # Output comparison
-    return render_template("compared.html", file1=file1, file2=file2)
+
     # , file1=highlights1, file2=highlights2)
 
 

@@ -10,14 +10,23 @@
         <br>
         <br>
         <br>
+        <table class="table table-striped">
+        <tr>
+            <th>UID</th>
+            <th>Build Number</th>
+            <th>Product</th>
+            <th>Region</th>
+            <th>Table</th>
+            <th>Query</th>
+            <th>Result Text</th>
+            <th>Result Value</th>
+            <th>Expected</th>
+        </tr>
 
-    {{ file1 }}
-        <br>
-        <br>
-        <br>
-        <br>
-
-    {{ file2 }}
-
+        {% for uid in file1 %}
+            <td>{{ file1.uid }}</td>
+        {% endfor %}
+    </table>
     </p>
 {% endblock %}
+
