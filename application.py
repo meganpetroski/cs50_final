@@ -21,7 +21,7 @@ def index():
     # cal = (calendar.calendar(2018))
     # print(cal)
 
-    return render_template("home.html")
+    return render_template("home.html", sample=sample)
 
 @app.route("/compare")
 def compare():
@@ -30,16 +30,23 @@ def compare():
 
     return render_template("compare.html", dates1=dates1)
 
-@app.route("/compared", methods=["POST"])
+@app.route("/compared")
 def compared():
+    # get the data from run #1
+    file1 = db.execute("SELECT * FROM data WHERE buildnumber = :file1", file1='11723')
+    # get the data from run #2
+    file2 = db.execute("SELECT * FROM data WHERE buildnumber = :file2", file2='11607')
+
+
+
     # read files
-    if not request.files["file1"] or not request.files["file2"]:
-        abort(400, "missing file")
-    try:
-        file1 = request.files["file1"].read().decode("utf-8")
-        file2 = request.files["file2"].read().decode("utf-8")
-    except Exception:
-        abort(400, "invalid file")
+    # if not request.files["file1"] or not request.files["file2"]:
+    #     abort(400, "missing file")
+    # try:
+    #     file1 = request.files["file1"].read().decode("utf-8")
+    #     file2 = request.files["file2"].read().decode("utf-8")
+    # except Exception:
+    #     abort(400, "invalid file")
 
     # # Compare files
     # if not request.form.get("algorithm"):
@@ -62,7 +69,7 @@ def compared():
     # highlights2 = highlight(file2, matches)
 
     # Output comparison
-    return render_template("compared.html")
+    return render_template("compared.html", file1=file1, file2=file2)
     # , file1=highlights1, file2=highlights2)
 
 
