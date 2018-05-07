@@ -20,3 +20,4 @@ https://www.inmotionhosting.com/support/edu/website-design/inserting-links-into-
 https://gis.stackexchange.com/questions/72458/export-list-of-values-into-csv-or-txt-file
 https://docs.python.org/2/library/csv.html
 https://stackoverflow.com/questions/45877080/how-to-create-dropdown-menu-from-python-list-using-flask-and-html?rq=1&utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+http://palewi.re/posts/2008/04/26/python-recipe-connect-to-mysql-database-execute-a-query-print-the-results/
