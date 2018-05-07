@@ -19,3 +19,4 @@ https://www.w3schools.com/html/html_styles.asp
 https://www.inmotionhosting.com/support/edu/website-design/inserting-links-into-website/creating-an-email-link-in-your-webpage
 https://gis.stackexchange.com/questions/72458/export-list-of-values-into-csv-or-txt-file
 https://docs.python.org/2/library/csv.html
+https://stackoverflow.com/questions/45877080/how-to-create-dropdown-menu-from-python-list-using-flask-and-html?rq=1&utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa

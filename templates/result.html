@@ -6,11 +6,18 @@
 
 {% block main %}
     <p>
-
-     <select name= build_numbers action="/">
-         {% for build_numbers in build_numbers %}
-         <option value= "{{build_numbers}}" SELECTED>{{build_numbers}}</option>"
+        <br>
+        <br>
+        <br>
+        <br>
+         <form action="/result" enctype="multipart/form-date" method="post">
+            <div class="form-group">
+            <select class="form-control-file" name="file1" type="file">
+                <option disabled selected value="">Select build_number</option>
+                {% for date in dates1 %}
+                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
 
                 {% endfor %}
+            </select>
     </p>
 {% endblock %}
