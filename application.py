@@ -157,6 +157,9 @@ def results():
     # get the data from the run number selected
     file1 = db.execute("SELECT * FROM data WHERE buildnumber = :file1", file1='11723')
 
+    #if_name_=="_main_":
+        #app.run()
+
     return render_template("results.html", file1=file1)
 
 
