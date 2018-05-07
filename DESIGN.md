@@ -11,4 +11,9 @@ product are chosen and run but it's still not as pretty as we want it to be. Thi
 create a simple webpage that displays the results in different ways based on user input.
 
 The first step in implementing this project was creating a mock dataset. We have a number of rules around our data so this is a subset we mocked up
-that we will be able to scale up in house. It took a few tries to git
+that we will be able to scale up in house. It took a few tries to get the table organized and the column field types correctly labeled. Instead of adding the
+1000+ rows of data we wanted available for this project, we created a CSV that we could both work on and uploaded that via the phpliteadmin interface. This took
+a bit of finagling because I sillily enough forgot that a CSV is divided by commas not semi-colons.
+
+Once the data was in place we started tackling the website portion. Again, it took a bit of trial and error, but we found that starting our website from the beginning
+and adding in modules as we need them,
