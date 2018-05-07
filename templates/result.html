@@ -7,10 +7,12 @@
 {% block main %}
     <p>
 
-        <br>
-        <br>
-        <br>
-        <br>
-        placeholder for result page
+       <form action="/result" enctype="multipart/form-date" method="post">
+            <div class="form-group">
+            <select class="form-control-file" name="file1" type="file">
+                <option disabled selected value="">Select Build</option>
+                {% for date in dates1 %}
+                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
+                {% endfor %}
     </p>
 {% endblock %}

@@ -147,5 +147,17 @@ def query():
 
 @app.route("/result")
 def result():
+    # get a list of run numbers
+    dates1 = db.execute("SELECT DISTINCT buildnumber FROM data")
 
-    return render_template("result.html")
+    return render_template("result.html", dates1=dates1)
+
+@app.route("/results")
+def results():
+    # get the data from the run number selected
+    file1 = db.execute("SELECT * FROM data WHERE buildnumber = :file1", file1='11723')
+
+    return render_template("results.html", file1=file1)
+
+
+    ##return render_template("result.html")
