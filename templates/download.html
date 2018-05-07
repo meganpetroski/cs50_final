@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Comparison
+{% endblock %}
+
+{% block main %}
+    <p>
+        <br>
+        <br>
+        <br>
+        <br>
+        <form action="/compare" enctype="multipart/form-date" method="post">
+            <div class="form-group">
+            <select class="form-control-file" name="file1" type="file">
+                <option disabled selected value="">First build number to compare</option>
+                {% for date in dates1 %}
+                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
+                {% endfor %}
+            </select>
+            <select class="form-control-file" name="file2" type="file">
+                <option disabled selected value="">Second build number to compare</option>
+                {% for date in dates1 %}
+                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+        <div class="form-group">
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" name="algorithm" type="checkbox" value="lines"/>
+                    Compare lines
+                </label>
+            </div>
+        <button class="btn btn-primary" type="submit">Compare</button>
+    </form>
+    {{ download1 }}
+</select>
+    </div>
+    </p>
+{% endblock %}
