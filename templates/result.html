@@ -10,14 +10,21 @@
         <br>
         <br>
         <br>
-         <form action="/result" enctype="multipart/form-date" method="post">
-            <div class="form-group">
+
+        <form name="Build_number" action="results.html" method='POST'>
             <select class="form-control-file" name="file1" type="file">
-                <option disabled selected value="">Select build_number</option>
+                <option disabled selected value="">build_number</option>
                 {% for date in dates1 %}
                     <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
 
                 {% endfor %}
             </select>
+
+        </form>
+            </div>
+        <button class="btn btn-primary" type="submit">Select</button>
+    </form>
+</select>
+    </div>
     </p>
 {% endblock %}
