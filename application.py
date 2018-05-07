@@ -5,7 +5,7 @@ import requests
 
 from contextlib import closing
 from html import escape
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, make_response, send_file
 from helpers import lines, sentences, substrings
 
 from cs50 import SQL
@@ -26,30 +26,40 @@ def download():
     # get a list of run numbers
     runs = db.execute("SELECT DISTINCT buildnumber FROM data")
 
-    buildnum_ret = request.args.get('buildnumber')
+    # return the build number chosen by the drop down menu
+    buildnum_ret = request.args.get('runs')
     print(buildnum_ret)
 
-    download1 = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber='11723')
+    # dynamically attach build number to csv output
+    csvfile = ("{}.csv".format(buildnum_ret))
 
-    csvfile = ("{}.csv".format(11723))
+    # data to download
+    download = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
 
-    #Assuming res is a flat list
+    # write results to csv
     with open(csvfile, "w") as output:
         writer = csv.writer(output, lineterminator='\n')
-        for row in download1:
+        for row in download:
             writer.writerow([row])
 
-    return render_template("download.html", runs=runs, download1=download1)
+    return render_template("download.html", runs=runs, download=download)
+
+app.route('/downloaded/')
+def return_files_tut():
+	try:
+		return send_file(csvfile, mimetype='text/csv')
+	except Exception as e:
+		return str(e)
 
 @app.route("/compare")
 def compare():
     # get the data from run #1
-    file1 = db.execute("SELECT * FROM data WHERE buildnumber = :file1", file1='11723')
+    file1 = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
 
     # get the data from run #2
-    file2 = db.execute("SELECT * FROM data WHERE buildnumber = :file2", file2='11607')
+    file2 = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
 
-    return render_template("compare.html", file1=file1)
+    return render_template("compare.html", file1=file1, file2=file2)
 
 @app.route("/query")
 def query():
