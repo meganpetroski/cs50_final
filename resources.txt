@@ -16,3 +16,6 @@ https://stackoverflow.com/questions/23557063/passing-value-from-a-drop-down-menu
 http://www.blog.pythonlibrary.org/2017/12/14/flask-101-adding-editing-and-displaying-data/
 http://opentechschool.github.io/python-flask/ --> used some styling from their webpage (http://opentechschool.github.io/python-flask/css/styles.css)
 https://www.w3schools.com/html/html_styles.asp
+https://www.inmotionhosting.com/support/edu/website-design/inserting-links-into-website/creating-an-email-link-in-your-webpage
+https://gis.stackexchange.com/questions/72458/export-list-of-values-into-csv-or-txt-file
+https://docs.python.org/2/library/csv.html
