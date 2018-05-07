@@ -24,11 +24,14 @@ def index():
 @app.route("/download")
 def download():
     # get a list of run numbers
-    dates1 = db.execute("SELECT DISTINCT buildnumber FROM data")
+    runs = db.execute("SELECT DISTINCT buildnumber FROM data")
 
-    download1 = db.execute("SELECT * FROM data WHERE buildnumber = '11723' LIMIT 10")
+    buildnum_ret = request.args.get('buildnumber')
+    print(buildnum_ret)
 
-    csvfile = "test.csv"
+    download1 = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber='11723')
+
+    csvfile = ("{}.csv".format(11723))
 
     #Assuming res is a flat list
     with open(csvfile, "w") as output:
@@ -36,7 +39,7 @@ def download():
         for row in download1:
             writer.writerow([row])
 
-    return render_template("download.html", dates1=dates1, download1=download1)
+    return render_template("download.html", runs=runs, download1=download1)
 
 @app.route("/compare")
 def compare():
