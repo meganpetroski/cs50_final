@@ -12,6 +12,11 @@ for the quality team to help during times of product release. Hopefully, this wi
 
 Distribution:
 Included with this project are a number of files.
+what each does
+html files
+python files
+text files
+database
 
 Home Page:
 The home page consists of the production calendar. Here you will see upcoming product releases, who they are assigned to and the deadline. You will also find a shortened explanation of how the website works.
