@@ -21,28 +21,6 @@ def index():
 
     return render_template("home.html")
 
-@app.route("/download")
-def download():
-    # get a list of run numbers
-    runs = db.execute("SELECT DISTINCT buildnumber FROM data")
-
-    # return the build number chosen by the drop down menu
-    buildnum_ret = request.args.get('runs')
-
-    # dynamically attach build number to csv output
-    csvfile = ("{}.csv".format(buildnum_ret))
-
-    # data to download
-    download = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
-
-    # write results to csv
-    with open(csvfile, "w") as output:
-        writer = csv.writer(output, lineterminator='\n')
-        for row in download:
-            writer.writerow([row])
-
-    return render_template("download.html", runs=runs, download=download)
-
 @app.route("/compare")
 def compare():
 
@@ -56,18 +34,23 @@ def query():
 @app.route("/result")
 def result():
     # get a list of run numbers
-    dates1 = db.execute("SELECT DISTINCT buildnumber FROM data")
+    runs = db.execute("SELECT DISTINCT buildnumber FROM data")
 
-    return render_template("result.html", dates1=dates1)
+    # return the build number chosen by the drop down menu
+    buildnum_ret = request.args.get('runs')
 
-@app.route("/results")
-def results():
-    # get the data from the run number selected
-    file1 = db.execute("SELECT * FROM data WHERE buildnumber = :file1", file1='11723')
+    # data to download
+    download = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
 
-    #if_name_=="_main_":
-        #app.run()
+    # dynamically attach build number to csv output
+    csvfile = ("{}.csv".format(buildnum_ret))
 
-    return render_template("results.html", file1=file1)
+     # write results to csv
+    with open(csvfile, "w") as output:
+        writer = csv.writer(output, lineterminator='\n')
+        for row in download:
+            writer.writerow([row])
+
+    return render_template("result.html", runs=runs, download=download)
 
 

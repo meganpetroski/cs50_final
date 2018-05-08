@@ -2,6 +2,22 @@ A "design document" for your project in the form of a Markdown file called DESIG
 how you implemented your project and why you made the design decisions you did. Your design document should be at least several paragraphs in length.
 Whereas your documentation is meant to be a user’s manual, consider your design document your opportunity to give the staff a technical tour of your project underneath its hood.
 
+DISTRIBUTION
+All the files needed to run the Heartbeat web app are included in the cs50_final submission.
+You should see the following files and folders:
+
+DESIGN.MD   README.md   application.py  compare.py  heartbeat.db    helpers.py  requirements.txt    resources.txt
+static/ templates
+
+UNDERSTANDING - how it does it (Betsy doing what they do)
+html files in general; mention special things we did
+.py files in general; focus on application.py
+heartbeat.db
+txt files - resources are listed
+
+
+
+
 Heartbeat is a project that was originally born out of the frustration of doing manual, repeative, but overall necessary, quality checks to the
 data produced in house at our company. These datasets have grown larger and larger over the years and it is still critical to perform all of these checks but they
 were taking longer and hampering our QC capacity. Over the past year Betsy and I have worked together to design the system, create the SQL queries for all of

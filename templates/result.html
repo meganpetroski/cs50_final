@@ -10,21 +10,19 @@
         <br>
         <br>
         <br>
-
-        <form name="Build_number" action="results.html" method='POST'>
-            <select class="form-control-file" name="file1" type="file">
-                <option disabled selected value="">build_number</option>
-                {% for date in dates1 %}
-                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
-
+        <form action="/result">
+            <div class="form-group">
+            <select class="form-control-file" name="runs" type="runs">
+                <option disabled selected value="">View Result</option>
+                {% for run in runs %}
+                    <option value="{{ run.buildnumber }}">{{ run.buildnumber }}</option>
                 {% endfor %}
             </select>
-
-        </form>
-            </div>
-        <button class="btn btn-primary" type="submit">Select</button>
-    </form>
+        </div>
+         <a href="/result" target="blank"><button class='btn btn-primary' type="submit">Submit & Download</button></a>
 </select>
     </div>
+    <br><br><br>
+    {{download}}
     </p>
 {% endblock %}
