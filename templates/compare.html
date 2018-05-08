@@ -1,41 +1,24 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Comparison
+    Compare
 {% endblock %}
 
 {% block main %}
-    <p>
-        <br>
-        <br>
-        <br>
-        <br>
-        <form action="/compare" enctype="multipart/form-date" method="post">
+<br><br><br><br>
+    <div class="col">
+        <form action="/compare" enctype="multipart/form-data" method="post">
             <div class="form-group">
-            <select class="form-control-file" name="file1" type="file">
-                <option disabled selected value="">First build number to compare</option>
-                {% for date in dates1 %}
-                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
-                {% endfor %}
-            </select>
-            <select class="form-control-file" name="file2" type="file">
-                <option disabled selected value="">Second build number to compare</option>
-                {% for date in dates1 %}
-                    <option value="{{ date.buildnumber }}">{{ date.buildnumber }}</option>
-                {% endfor %}
-            </select>
+            First file for comparison:<br>
+            <input class="form-control-file" name="file1" type="file"/>
         </div>
-    </form>
         <div class="form-group">
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" name="algorithm" type="checkbox" value="lines"/>
-                    Compare lines
-                </label>
-            </div>
-        <button class="btn btn-primary" type="submit">Compare</button>
-    </form>
-</select>
+            Second file for comparison:<br>
+            <input class="form-control-file" name="file2" type="file"/>
+        </div>
+        <button class="btn btn-success" type="submit">Submit</button>
+
+        </form>
     </div>
-    </p>
+
 {% endblock %}

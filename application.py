@@ -28,7 +28,6 @@ def download():
 
     # return the build number chosen by the drop down menu
     buildnum_ret = request.args.get('runs')
-    print(buildnum_ret)
 
     # dynamically attach build number to csv output
     csvfile = ("{}.csv".format(buildnum_ret))
@@ -44,22 +43,10 @@ def download():
 
     return render_template("download.html", runs=runs, download=download)
 
-app.route('/downloaded/')
-def return_files_tut():
-	try:
-		return send_file(csvfile, mimetype='text/csv')
-	except Exception as e:
-		return str(e)
-
 @app.route("/compare")
 def compare():
-    # get the data from run #1
-    file1 = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
 
-    # get the data from run #2
-    file2 = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
-
-    return render_template("compare.html", file1=file1, file2=file2)
+    return render_template("compare.html")
 
 @app.route("/query")
 def query():
@@ -84,4 +71,3 @@ def results():
     return render_template("results.html", file1=file1)
 
 
-    ##return render_template("result.html")
