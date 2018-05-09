@@ -1,4 +1,8 @@
 UNDERSTANDING - how it does it; how you implemented it and why you did what you did (Betsy doing what they do)
+A "design document" for your project in the form of a Markdown file called DESIGN.md that discusses, technically, how you implemented your project and why you made the design
+decisions you did. Your design document should be at least several paragraphs in length. Whereas your documentation is meant to be a user’s manual, consider your design
+document your opportunity to give the staff a technical tour of your project underneath its hood.
+all source code should be thoroughly commented.
 
 HTML files
 Starting with the layout.html page, we borrowed from past psets and a number of W3 School resources to design the template for the website. We played with fonts

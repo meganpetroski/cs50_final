@@ -5,7 +5,6 @@ from werkzeug.exceptions import default_exceptions, HTTPException
 from helpers import lines
 
 import os
-import calendar
 import csv
 import requests
 
@@ -25,6 +24,11 @@ db = SQL("sqlite:///heartbeat.db")
 def home():
 
     return render_template("home.html")
+
+@app.route("/about_us")
+def about_us():
+
+    return render_template("about_us.html")
 
 @app.route("/query")
 def query():
@@ -61,7 +65,7 @@ def compare_home():
 
 @app.route("/compare", methods=["POST"])
 def compare():
-
+    # resource: pset6 similiarities less version
     # Read files
     if not request.files["file1"] or not request.files["file2"]:
         abort(400, "missing file")
@@ -79,83 +83,16 @@ def compare():
     else:
         abort(400, "invalid algorithm")
 
-    # Highlight files
-    highlights1 = highlight(file1, matches)
-    highlights2 = highlight(file2, matches)
-
     # Output comparison
-    return render_template("compare.html", file1=highlights1, file2=highlights2)
-
-def highlight(s, strings):
-    """Highlight all instances of strings in s."""
-
-    # Get intervals for which strings match
-    intervals = []
-    for string in strings:
-        if not string:
-            continue
-        matches = [match.start() for match in re.finditer(re.escape(string), s)]
-        for match in matches:
-            intervals.append((match, match + len(string)))
-    intervals.sort(key=lambda x: x[0])
-
-    # Combine intervals to get highlighted areas
-    highlights = []
-    for interval in intervals:
-        if not highlights:
-            highlights.append(interval)
-            continue
-        last = highlights[-1]
-
-        # If intervals overlap, then merge them
-        if interval[0] <= last[1]:
-            new_interval = (last[0], interval[1])
-            highlights[-1] = new_interval
-
-        # Else, start a new highlight
-        else:
-            highlights.append(interval)
-
-    # Maintain list of regions: each is a start index, end index, highlight
-    regions = []
-
-    # If no highlights at all, then keep nothing highlighted
-    if not highlights:
-        regions = [(0, len(s), False)]
-
-    # If first region is not highlighted, designate it as such
-    elif highlights[0][0] != 0:
-        regions = [(0, highlights[0][0], False)]
-
-    # Loop through all highlights and add regions
-    for start, end in highlights:
-        if start != 0:
-            prev_end = regions[-1][1]
-            if start != prev_end:
-                regions.append((prev_end, start, False))
-        regions.append((start, end, True))
-
-    # Add final unhighlighted region if necessary
-    if regions[-1][1] != len(s):
-        regions.append((regions[-1][1], len(s), False))
-
-    # Combine regions into final result
-    result = ""
-    for start, end, highlighted in regions:
-        escaped = escape(s[start:end])
-        if highlighted:
-            result += f"<span>{escaped}</span>"
-        else:
-            result += escaped
-    return result
-
+    return render_template("compare.html", file1=file1, file2=file2)
 
 @app.errorhandler(HTTPException)
 def errorhandler(error):
     """Handle errors"""
+    # resource: pset6 similiarities less version
     return render_template("error.html", error=error), error.code
 
-
+# resource: pset6 similiarities less version
 # https://github.com/pallets/flask/pull/2314
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
