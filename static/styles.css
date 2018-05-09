@@ -57,7 +57,7 @@ div.col
 /* add padding around form */
 form
 {
-    padding: 15px;
+    padding: 0px;
 }
 
 /* wrap and scroll preformatted text */
@@ -65,7 +65,7 @@ pre
 {
     height: 100%;
     overflow: auto;
-    padding: 15px;
+    padding: 0px;
     white-space: pre-wrap;
 }
 
