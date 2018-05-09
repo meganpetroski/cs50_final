@@ -1,24 +1,15 @@
 {% extends "layout.html" %}
 
-{% block title %}
-    Compare
-{% endblock %}
-
-{% block main %}
+{% block body %}
 <br><br><br><br>
-    <div class="col">
-        <form action="/compare" enctype="multipart/form-data" method="post">
-            <div class="form-group">
-            First file for comparison:<br>
-            <input class="form-control-file" name="file1" type="file"/>
-        </div>
-        <div class="form-group">
-            Second file for comparison:<br>
-            <input class="form-control-file" name="file2" type="file"/>
-        </div>
-        <button class="btn btn-success" type="submit">Submit</button>
+    <!-- lefthand column -->
+    <div class="col-6">
+        <pre>{{ file1 | safe }}</pre>
+    </div>
 
-        </form>
+    <!-- righthand column -->
+    <div class="col-6">
+        <pre>{{ file2 | safe }}</pre>
     </div>
 
 {% endblock %}

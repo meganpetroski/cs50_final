@@ -1,3 +1,9 @@
+import re
+import cs50
+from html import escape
+from werkzeug.exceptions import default_exceptions, HTTPException
+from helpers import lines, sentences, substrings
+
 import os
 import calendar
 import csv
@@ -5,7 +11,7 @@ import requests
 
 from contextlib import closing
 from html import escape
-from flask import Flask, render_template, request, make_response, send_file
+from flask import Flask, render_template, request, make_response, send_file, abort, redirect
 from helpers import lines, sentences, substrings
 
 from cs50 import SQL
@@ -17,14 +23,14 @@ app = Flask(__name__)
 db = SQL("sqlite:///heartbeat.db")
 
 @app.route("/")
-def index():
+def home():
 
     return render_template("home.html")
 
 @app.route("/compare")
 def compare():
 
-    return render_template("compare.html")
+    return render_template("index.html")
 
 @app.route("/query")
 def query():
@@ -41,6 +47,7 @@ def result():
 
     # data to download
     download = db.execute("SELECT * FROM data WHERE buildnumber = :buildnumber", buildnumber=buildnum_ret)
+
 
     # dynamically attach build number to csv output
     csvfile = ("{}.csv".format(buildnum_ret))

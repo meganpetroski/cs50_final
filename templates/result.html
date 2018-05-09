@@ -5,24 +5,48 @@
 {% endblock %}
 
 {% block main %}
-    <p>
-        <br>
-        <br>
-        <br>
-        <br>
-        <form action="/result">
-            <div class="form-group">
-            <select class="form-control-file" name="runs" type="runs">
-                <option disabled selected value="">View Result</option>
-                {% for run in runs %}
-                    <option value="{{ run.buildnumber }}">{{ run.buildnumber }}</option>
-                {% endfor %}
-            </select>
-        </div>
-         <a href="/result" target="blank"><button class='btn btn-primary' type="submit">Submit & Download</button></a>
+<br><br><br><br>
+    <form action="/result">
+        <div class="form-group">
+        <select class="form-control-file" name="runs" type="runs">
+            <option disabled selected value="">View Result</option>
+            {% for run in runs %}
+                <option value="{{ run.buildnumber }}">{{ run.buildnumber }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <a href="/result" target="blank"><button class='btn btn-primary' type="submit">Submit & Download</button></a>
 </select>
     </div>
     <br><br><br>
-    {{download}}
-    </p>
+        <div class="row">
+            <div clas="col-sm-90">
+                <table id="3" class="table table-striped DataTable" bgcolor="#c1c1c3" style="width:100%">
+                <thead>
+                  <tr>
+                    <th>Build Number</th>
+                    <th>Product</th>
+                    <th>Region</th>
+                    <th>Table</th>
+                    <th>Query</th>
+                    <th>Result Text</th>
+                    <th>Result Value</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                    {% for i in download %}
+                    <tr>
+                        <td>{{ i.buildnumber }}</td>
+                        <td>{{ i.product }}</td>
+                        <td>{{ i.region }}</td>
+                        <td>{{ i.table }}</td>
+                        <td>{{ i.query }}</td>
+                        <td>{{ i.result_text }}</td>
+                        <td>{{ i.result_count }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+        </div>
 {% endblock %}
