@@ -45,7 +45,7 @@ def result():
     # dynamically attach build number to csv output
     csvfile = ("{}.csv".format(buildnum_ret))
 
-     # write results to csv
+    # write results to csv
     with open(csvfile, "w") as output:
         writer = csv.writer(output, lineterminator='\n')
         for row in download:

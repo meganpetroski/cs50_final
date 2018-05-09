@@ -1,56 +1,39 @@
-A "design document" for your project in the form of a Markdown file called DESIGN.md that discusses, technically,
-how you implemented your project and why you made the design decisions you did. Your design document should be at least several paragraphs in length.
-Whereas your documentation is meant to be a user’s manual, consider your design document your opportunity to give the staff a technical tour of your project underneath its hood.
+UNDERSTANDING - how it does it; how you implemented it and why you did what you did (Betsy doing what they do)
 
-DISTRIBUTION
-All the files needed to run the Heartbeat web app are included in the cs50_final submission.
-You should see the following files and folders:
+HTML files
+Starting with the layout.html page, we borrowed from past psets and a number of W3 School resources to design the template for the website. We played with fonts
+and colors to make the website pleasing and adjusted headers and paragraph sections to appropriate, readable sizes. The nav bar took a little bit of trial and error
+to get the Heartbeat name to stay a different color and static and then set up the other links. Home has a few special elements to it like the embedded Smartsheets calendar
+and the ability to email staff with questions or additonal queries. The email was incredibly easy to set up with the "mailto" function. Smartsheets offers
+users the ability to download a report (in this case a calendar) into Google sheet and then we read the documentation (via Google) on how to add an embedded sheet to
+the webpage. The quality team is the biggest consumer of the results Heartbeat provides so the Smartsheet we added was the calendar of releases for the product
+we picked for the dataset. Our users often have suggestions for queries to add, so we've added a support email using the mailto tag that allows them to send a note to us
+with their idea. The query page is simply a listing of text seperated by line breaks <br>. The result page is where we needed to iterate through a list of buildnumbers
+in a drop down menu and allow a user to select a particular run. The submit button needed to be implemented so that it would kick off the printing to the screen and the
+downloading a CSV file. Compare is pretty much the same as what we did for pset6 - takes 2 input files and then shows the resulting highlighted differences. This was the
+most difficult element to make work but more on that in the application.py section.
 
-DESIGN.MD   README.md   application.py  compare.py  heartbeat.db    helpers.py  requirements.txt    resources.txt
-static/ templates
+PY files
+Compare.py and helpers.py are both from pset 6 with a few minor changes. We wanted compare to always work on a line by line basis since the queries are always done in the same
+order so we removed the other options that were available in pset6 and defaulted to always checking line by line. This code reminded us about the difference between get and post
+as well as checking for nulls and not leaving ourselves open to sql injection attacks. The hardest part of the later psets was taking code that we hadn't written from scratch so
+this portion of our final project definitely proved the trickiest! Application.py followed a similar format as the psets, main differences being our heartbeat.db database and
+the data table within it (more on that shortly). As we added new features and bits of code, we added to the modules at the top of the file. At first we had tried to start with
+a fully fleshed out version of application.py from another pset and replace as we went but that proved to be more complicated than starting from scatch. Other highlights of
+application.py was the results section. One of the harder and more fun things we aimed for was being able to download the results selected into a csv. Quite satisfying when
+the csv spit out! This served two purposes - gave users a hard copy to manipulate as they wanted and provided a csv for uploading in the compare section.
+Iterating over the output to provide the results in the format we liked (not just a dump of key:value pairs) took some time to tweak. We noted all of our resources in the
+resources.txt file as they quickly became more numerous than our code had room for.
 
-UNDERSTANDING - how it does it (Betsy doing what they do)
-html files in general; mention special things we did
-.py files in general; focus on application.py
-heartbeat.db
-txt files - resources are listed
+HEARTBEAT.DB
+The database needed to be set up properly before we could do much of the implementation of the tougher parts of our goal so this was the first thing we started with.
+Phpliteadmin is pretty amazing in the CS50 interface. We simply made a csv with all the mock data we wanted to include with the project and then created a table (data)
+and were able to add all the fields and field types easily. From there we uploaded the csv and boom, 1100+ records later we were ready to go.
 
+TXT files
+We included requirements.txt for the comparison portion of things and resources.txt to fully list out all of the resources we consulted while solving the challenge of the
+final project.
 
-
-
-Heartbeat is a project that was originally born out of the frustration of doing manual, repeative, but overall necessary, quality checks to the
-data produced in house at our company. These datasets have grown larger and larger over the years and it is still critical to perform all of these checks but they
-were taking longer and hampering our QC capacity. Over the past year Betsy and I have worked together to design the system, create the SQL queries for all of
-the checks, store the code in version control, and work with fellow engineers to wrap the code in an automated executor (Jenkins).
-
-But we needed to take this one step further. The Jenkins console ouput was mediocre at best and required users to ctrl+f to find the tables they were looking for.
-We now have a csv output of the data each time a build number and product are chosen and run but it's still not as pretty as we want it to be.
-CS50 gave us the skills and confidence to do what we really wanted - create a simple webpage that displays the results in different ways based on user input.
-
-The first step in implementing this project was creating a mock dataset. This was the first time we had uploaded a CSV of data to phpliteadmin so it took a few tries
-to get the columns labeled, in order, with the correct field types in both the csv and the phpliteadmin database. Then we fiddled with the import controls (it took us awhile
-to remember that commas, not semi-colons were what csv's ended in...!) in phpliteadmin until we had our database up and running.
-
-Once the data was in place we started tackling the website portion. We found that this particular website was much easier to build than any in the psets we had
-tackled in class because the topic was something we knew inside and out and we started with a blank slate. Using pset7 (CS50 Finance) and a number of web resources listed
-in the resources.txt file, we built up our application.py script to allow us to visualize the home.html page with layout.html. We were able to find a lot of help with the
-artistic design components from W3 Schools which had a neat application that allowed you to fiddle with their sample code and then implement the concepts (text size, font,
-colors, heading styles, etc) in our website. The quality team is the biggest consumer of the results Heartbeat provides so we added the calendar of releases for the product
-we picked for the dataset. We use smartsheets inhouse to track the quarterly releases and were able to embed the appropriate calendar on the homepage. Our users often have
-suggestions for queries to add, so we've added a support email using the mailto tag that allows them to send a note to us with their idea.
-
-The query page serves as a reference for folks who are interested in SQL either because they are trying to make their own queries or they are looking for more detail about
-the queries that we've implemented. We wrote up the queries and descriptions of what the queries were designed to look for, as well as expected outcome, and implemented a simple
-table format for display.
-
-The results page is designed to allow users to display the results of a particular run on the webpage. We used db.execute like we had in pset7 to pull all the results for a
-build number the user enters and put the output in a table format for easier reading. This is important for the Quality team here because they need to record the results before the
-final check off on the product.
-
-The download page allows a user to choose up to 2 run numbers and download the csv's. The csv's can be used by the QC team to replace the checklist they fill out before product release or
-by product managers and production teams to narrow down errors. The download page allows a user to download up to 2 runs so that they can be used on the compare page.
-
-The compare page is one of the coolest elements of the webpage because it allows the user to upload 2 csv's (from the download page!) and compare one day against another. This is
-a really important component of the project because the ideas is to be able to track change over time and see when something has gone wrong without teams having to pour
-through the data manually and frequently. The compare page was heavily influenced by pset6 when we did the Similarities problem. This allows users to see where results differ quickly
-and visually.
+OVERALL THOUGHTS
+Overall, we wanted the implementation of Heartbeat to be simple and this influenced every descision we made. Keeping the html pages free of distraction and crazy colors so that
+the purpose of the site was clear for our end users. cd ..
