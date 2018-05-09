@@ -35,12 +35,12 @@
                 </thead>
 
                 <tbody>
-                    {% for i in download %}
+                    {% for i in htmlcsv %}
                     <tr>
                         <td>{{ i.buildnumber }}</td>
                         <td>{{ i.product }}</td>
                         <td>{{ i.region }}</td>
-                        <td>{{ i.table }}</td>
+                        <td>{{ i.attribution }}</td>
                         <td>{{ i.query }}</td>
                         <td>{{ i.result_text }}</td>
                         <td>{{ i.result_count }}</td>

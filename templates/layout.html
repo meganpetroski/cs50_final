@@ -10,6 +10,17 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <style>
+.footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: floarlwhite;
+   color: gray;
+   text-align: center;
+   font-family: "Montserrat", "Helvetica Neue", Arial, Helvetica, sans-serif;
+   font-size: 11px;
+}
 
 body {
   margin: 0;
@@ -52,7 +63,7 @@ h1 {
           <li><a class="nav-link" style="margin-left:30px;" href="/">Home</a></li>
           <li><a class="nav-link" href="/query">Query</a></li>
           <li><a class="nav-link" href="/result">Results</a></li>
-          <li><a class="nav-link" href="/compare">Compare</a></li>
+          <li><a class="nav-link" href="/compare_home">Compare</a></li>
         </ul>
       </div>
     </nav>
@@ -60,7 +71,9 @@ h1 {
         <main class="container p-5">
             {% block main %}{% endblock %}
         </main>
-
+      <div class="footer">
+  <p>Copyright 2018 CS50</p>
+</div>
     </body>
 
 </html>

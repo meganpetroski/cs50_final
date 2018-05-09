@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser
-from helpers import lines, sentences, substrings
+from helpers import lines
 
 
 def main():
@@ -10,9 +10,6 @@ def main():
     parser = ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--lines", action="store_true", help="compare lines")
-    group.add_argument("--sentences", action="store_true", help="compare sentences")
-    group.add_argument("--substrings", metavar="N", type=positive,
-                       help="compare substrings of length N")
     parser.add_argument("FILE1", help="file to compare")
     parser.add_argument("FILE2", help="file to compare")
     args = vars(parser.parse_args())
@@ -32,10 +29,6 @@ def main():
     # Compare files
     if args["lines"]:
         matches = lines(file1, file2)
-    elif args["sentences"]:
-        matches = sentences(file1, file2)
-    elif args["substrings"]:
-        matches = substrings(file1, file2, args["substrings"])
 
     # Output sorted matches
     for match in sorted(matches, key=len, reverse=True):
