@@ -6,15 +6,15 @@
 
 {% block main %}
 <br><br><br><br>
- <p style="font-size:110%;color:black;font-family:Helvetica;text-align:left;">Please select a run number to view the results below.<br><br><br></p>
+ <p style="font-size:110%;color:black;font-family:Helvetica;text-align:center;">Please select a run number to view the results below.<br><br></p>
     <form action="/result">
         <div class="form-group">
-        <select class="form-control-file" name="runs" type="runs">
-            <option disabled selected value="">View Result</option>
-            {% for run in runs %}
-                <option value="{{ run.buildnumber }}">{{ run.buildnumber }}</option>
-            {% endfor %}
-        </select>
+            <select class="form-control-file" name="runs" type="runs">
+                <option disabled selected value="">Build Number</option>
+                {% for run in runs %}
+                    <option value="{{ run.buildnumber }}">{{ run.buildnumber }}</option>
+                {% endfor %}
+            </select>
     </div>
     <a href="/result" target="blank"><button class='btn btn-primary' type="submit">Submit & Download</button></a>
 </select>
