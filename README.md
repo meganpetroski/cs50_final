@@ -11,21 +11,21 @@ interactive web interface where editors will be able to view deadlines, results,
 for the quality team to help during times of product release. Hopefully, this will be a tool to help move more quality work upstream and heighten awareness throughout the production teams.
 
 Distribution:
-Included with this project are a number of files.
-what each does
-html files
-python files
-text files
-database
+Included with this project are a number of files. There are 6 html files.The is one html file for each page on the website, these contain the formatting for each page.
+There are 4 python files, 2 text files, and 1 databse included with this project.
 
+After executing flask run in the ide you will be able to open the the website, which consists of the below pages:
 Home Page:
-The home page consists of the production calendar. Here you will see upcoming product releases, who they are assigned to and the deadline. You will also find a shortened explanation of how the website works.
+The home page displays the external release production calendar. Here you will see upcoming product releases, who they are
+assigned to and the deadline. You will also find a brief explanation of how to use the website.
 
 Query Page:
-The query page shows all of the queries that run nightly and provides a brief explanation of what each is doing. The queries we have included in this project
+The query page shows all of the queries that run nightly and provides a brief explanation of what each is doing. The queries we have
+included in this project are for the object table only.
 
 Results Page:
-The results page features a drop down menu that selects the most recent run number and displays the results from the queries run.
+The results page features a drop down menu where you can select the most recent run numbers and display the results below. This will also automatically
+download a CSV of the results into your ide.
 
 Compare Page:
 The compare page allows you to select two different runs and compare the results. This will help you to evaluate the change over time in the product that you chose.
