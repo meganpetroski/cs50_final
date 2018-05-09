@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from argparse import ArgumentParser
-from helpers import lines
+from helpers import linesfl
 
 
 def main():
