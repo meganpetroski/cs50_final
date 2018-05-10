@@ -68,10 +68,3 @@ pre
     padding: 0px;
     white-space: pre-wrap;
 }
-
-/* highlight spans */
-span
-{
-    background-color: #ff0;
-}
-
