@@ -22,21 +22,24 @@ db = SQL("sqlite:///heartbeat.db")
 
 @app.route("/")
 def home():
-
+    # just need to render home page
     return render_template("home.html")
 
 @app.route("/about_us")
 def about_us():
-
+    # just need to render about us page
     return render_template("about_us.html")
 
 @app.route("/query")
 def query():
-
+    # just need to render query page
     return render_template("query.html")
 
 @app.route("/result")
 def result():
+    # resources: https://stackoverflow.com/questions/23557063/passing-value-from-a-drop-down-menu-to-a-flask-template,
+    # https://scotch.io/bar-talk/processing-incoming-request-data-in-flask
+    # http://palewi.re/posts/2008/04/26/python-recipe-connect-to-mysql-database-execute-a-query-print-the-results/
     # get a list of run numbers
     runs = db.execute("SELECT DISTINCT buildnumber FROM data")
 
@@ -60,7 +63,7 @@ def result():
 
 @app.route("/compare_home")
 def compare_home():
-
+    # just need to render template for compare_home
     return render_template("compare_home.html")
 
 @app.route("/compare", methods=["POST"])
