@@ -1,8 +1,3 @@
-/* mashup of resources including: https://www.w3schools.com/bootstrap/bootstrap_navbar.asp,
-https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_topnav
-https://www.quackit.com/css/css_color_codes.cfm
-https://www.w3schools.com/colors/colors_names.asp */
-
 nav .navbar-brand
 {
     /* size for brand */
@@ -73,10 +68,3 @@ pre
     padding: 0px;
     white-space: pre-wrap;
 }
-
-/* highlight spans */
-span
-{
-    background-color: #ff0;
-}
-

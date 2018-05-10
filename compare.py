@@ -5,7 +5,7 @@ from helpers import lines
 
 
 def main():
-    # edited from pset6
+
     # Parse command-line arguments
     parser = ArgumentParser()
     group = parser.add_mutually_exclusive_group(required=True)
